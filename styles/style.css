@@ -1,0 +1,50 @@
+@import url('./reset.css');
+:root {
+  --bg-color: #003b46;
+  --card-bg: #002d35;
+  --text-color: #ffffff;
+  --accent-color: #ff4d4d;
+  --border-color: #005a6a;
+  --favorite-color: #ffd700;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+}
+
+h1 {
+  color: var(--text-color);
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.pokemon-cards-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.pokemon-card {
+  max-width: 310px;
+  width: 100%;
+  border: 1px solid grey;
+  display: flex;
+  flex-direction: column;
+  .sprite {
+    height: 100px;
+    img {
+      height: 100%;
+      object-fit: fill;
+      object-position: center;
+
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 1.4rem;
+  }
+}
