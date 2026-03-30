@@ -16,8 +16,13 @@ export async function fetchPokemon(url) {
   return data;
 }
 
-export async function fetchPokemonSpecies(id) {
+export async function fetchPokemonsSpecies(id) {
   const url = "https://pokeapi.co/api/v2/pokemon-species/" + id;
+  const data = await fetchData(url);
+  return data;
+}
+export async function fetchPokemonsGender(id) {
+  const url = "https://pokeapi.co/api/v2/gender/" + id;
   const data = await fetchData(url);
   return data;
 }

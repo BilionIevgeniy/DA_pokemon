@@ -1,15 +1,15 @@
+import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js";
+
 import {
   fetchPokemon,
   fetchPokemons,
-  fetchPokemonSpecies,
+  fetchPokemonsSpecies,
 } from "../api/api.js";
 import { modal, spinner } from "../existedElements.js";
-import { calcScroll, getRandomHexColor } from "../helpers/helpers.js";
+import { calcScroll, getRandomHexColor } from "../api/helpers/helpers.js";
 import { renderPokemons } from "../render.js";
 import { generatePokemonsModalTemplate } from "../templates.js";
-function showSpinner(show) {
-  spinner.style.display = show ? "flex" : "none";
-}
+
 export async function fetchPokemonAction(state) {
   showSpinner(true);
   const data = await fetchPokemons(state.nextUrl);
@@ -66,6 +66,18 @@ export async function nextModalContentAction(state, isNext) {
   return newState;
 }
 
+// HELPRES
+function showSpinner(show) {
+  spinner.style.display = show ? "flex" : "none";
+}
+
+function showModal(modalContent) {
+  modal.style.display = "flex";
+  modal.innerHTML = modalContent;
+  document.body.style.overflow = "hidden";
+  document.body.style.paddingRight = `${calcScroll()}px`;
+}
+
 function calcPokemonsIndex(state, isNext) {
   let currentPokemonsIdx = state.pokemons.findIndex(
     (pokemon) => pokemon.id == state.currentPokemonsId,
@@ -82,13 +94,6 @@ function calcPokemonsIndex(state, isNext) {
   return currentPokemonsIdx;
 }
 
-function showModal(modalContent) {
-  modal.style.display = "flex";
-  modal.innerHTML = modalContent;
-  document.body.style.overflow = "hidden";
-  document.body.style.paddingRight = `${calcScroll()}px`;
-}
-
 async function getModalsContent(state, id) {
   const currentPokemon = state.pokemons.find((pokemon) => pokemon.id == id);
   let pokemonsSpecies = state.pokemonsSpecies.find(
@@ -96,13 +101,44 @@ async function getModalsContent(state, id) {
   );
   if (!pokemonsSpecies) {
     showSpinner(true);
-    pokemonsSpecies = await fetchPokemonSpecies(id);
+    pokemonsSpecies = await fetchPokemonsSpecies(id);
     showSpinner();
     state.pokemonsSpecies.push(pokemonsSpecies);
   }
+
   const modalContent = generatePokemonsModalTemplate({
     ...currentPokemon,
     ...pokemonsSpecies,
   });
   return [state, modalContent];
+}
+
+export function openMadalStatsContentAction(target) {
+  const { content } = target.dataset || {};
+  const card = target.closest(".card");
+  const ctx = card.querySelector(`.stats-content:nth-child(${content})`);
+  generateStats(ctx);
+}
+
+function generateStats(ctx) {
+  const char = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      datasets: [
+        {
+          label: "# of Votes",
+          data: [12, 19, 3, 5, 2, 3],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
 }
