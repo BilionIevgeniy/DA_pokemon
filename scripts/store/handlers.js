@@ -1,7 +1,9 @@
-import { modal } from "../existedElements.js";
-import { calcScroll, getRandomHexColor } from "../helpers/helpers.js";
-import { renderPokemons } from "../render.js";
-import { fetchPokemonAction, filterPokemonsAction } from "./actions.js";
+import {
+  closeModalAction,
+  fetchPokemonAction,
+  filterPokemonsAction,
+  openPokemonsModalAction,
+} from "./actions.js";
 
 export const ACTION_HANDLERS = {
   fetchPokemonsAction: handleFetchPokemons,
@@ -22,21 +24,11 @@ function handleFilterPokemons(state, { event }) {
 }
 
 function handleOpenPokemonsModal(state, { id }) {
-  const currentPokemon = state.pokemons.find((pokemon) => pokemon.id == id);
-  const modalContent = generatePokemonsModalContent(currentPokemon);
-  modal.style.display = "flex";
-  const scroll = calcScroll();
-  document.body.style.overflow = "hidden";
-  document.body.style.paddingRight = `${scroll}px`;
-  return state;
+  return openPokemonsModalAction(state, id);
 }
 
 function handleCloseModal(state, { event }) {
-  if (modal == event.target) {
-    modal.style.display = "none";
-    document.body.style.overflow = "";
-    document.body.style.paddingRight = "0px";
-  }
+  closeModalAction(event);
   return state;
 }
 

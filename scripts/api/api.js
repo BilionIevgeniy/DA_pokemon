@@ -17,7 +17,7 @@ export async function fetchPokemon(url) {
 }
 
 export async function fetchPokemonSpecies(id) {
-  const baseUrl = "https://pokeapi.co/api/v2/pokemon-species/";
+  const url = "https://pokeapi.co/api/v2/pokemon-species/" + id;
   const data = await fetchData(url);
   return data;
 }

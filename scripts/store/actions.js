@@ -1,6 +1,12 @@
-import { fetchPokemon, fetchPokemons } from "../api/api.js";
-import { getRandomHexColor } from "../helpers/helpers.js";
+import {
+  fetchPokemon,
+  fetchPokemons,
+  fetchPokemonSpecies,
+} from "../api/api.js";
+import { modal } from "../existedElements.js";
+import { calcScroll, getRandomHexColor } from "../helpers/helpers.js";
 import { renderPokemons } from "../render.js";
+import { generatePokemonsModalTemplate } from "../templates.js";
 
 export async function fetchPokemonAction(state) {
   const data = await fetchPokemons(state.nextUrl);
@@ -28,5 +34,33 @@ export function filterPokemonsAction(state) {
     renderPokemons(filteredPokemons, true);
   } else {
     renderPokemons(state.pokemons);
+  }
+}
+
+export async function openPokemonsModalAction(state, id) {
+  const currentPokemon = state.pokemons.find((pokemon) => pokemon.id == id);
+  const pokemonsSpecies = state.pokemonsSpeciec.find(
+    (pokemon) => pokemon.id == id,
+  );
+  if (!pokemonsSpecies) {
+    const currentPokemonsSpecies = await fetchPokemonSpecies(id);
+    state.pokemonsSpeciec.push(currentPokemonsSpecies);
+  }
+  const modalContent = generatePokemonsModalTemplate({
+    ...currentPokemon,
+    ...pokemonsSpecies,
+  });
+  modal.style.display = "flex";
+  modal.innerHTML = modalContent;
+  document.body.style.overflow = "hidden";
+  document.body.style.paddingRight = `${calcScroll()}px`;
+  return state;
+}
+
+export function closeModalAction(event) {
+  if (modal == event.target) {
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "0px";
   }
 }
