@@ -95,7 +95,9 @@ async function getModalsContent(state, id) {
     (pokemon) => pokemon.id == id,
   );
   if (!pokemonsSpecies) {
+    showSpinner(true);
     pokemonsSpecies = await fetchPokemonSpecies(id);
+    showSpinner();
     state.pokemonsSpecies.push(pokemonsSpecies);
   }
   const modalContent = generatePokemonsModalTemplate({
