@@ -1,0 +1,19 @@
+export const getRandomHexColor = () => {
+  return `#${Math.floor(Math.random() * 16777215)
+    .toString(16)
+    .padStart(6, "0")}`;
+};
+
+export function calcScroll() {
+  let div = document.createElement("div");
+  div.style.width = "50px";
+  div.style.height = "50px";
+  div.style.overflowY = "scroll";
+  div.style.visibility = "hidden";
+
+  document.body.appendChild(div);
+  let scrollWidth = div.offsetWidth - div.clientWidth;
+  div.remove();
+
+  return scrollWidth;
+}

@@ -5,16 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="scripts/script.js" type="module"></script>
   <link rel="stylesheet" href="styles/style.css">
-  <!-- <link rel="icon" type="image/x-icon" href="assets/img/book.jpg"> -->
-  <title>Title</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/fav.png">
+  <title>PokeDex</title>
 </head>
 <body>
   <h1>Pokemon</h1>
-  <div class="pokemon-cards-wrapper">
-
-  </div>
+  <input data-action="filterPokemonsAction" id="filterName" type="text">
+  <div class="pokemon-cards-wrapper"></div>
   <div class="more-pokemons-btn-wrapper">
-    <button data-action="fetchMorePokemons" class="more-pokemons-btn">More Pokemons</button>
+    <button data-action="fetchPokemonsAction" class="more-pokemons-btn">More Pokemons</button>
   </div>
+  <!-- Modal -->
+  <div data-action="closeModalAction" class="modal"></div>
 </body>
 </html>
