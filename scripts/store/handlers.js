@@ -1,8 +1,7 @@
-import { fetchPokemon, fetchPokemons } from "../api/api.js";
 import { modal } from "../existedElements.js";
 import { calcScroll, getRandomHexColor } from "../helpers/helpers.js";
 import { renderPokemons } from "../render.js";
-import { fetchPokemonAction } from "./actions.js";
+import { fetchPokemonAction, filterPokemonsAction } from "./actions.js";
 
 export const ACTION_HANDLERS = {
   fetchPokemonsAction: handleFetchPokemons,
@@ -18,15 +17,7 @@ function handleFetchPokemons(state) {
 }
 
 function handleFilterPokemons(state, { event }) {
-  const value = event.target.value;
-  if (value) {
-    const filteredPokemons = state.pokemons.filter((pokemon) =>
-      pokemon.name.includes(value.toLowerCase()),
-    );
-    renderPokemons(filteredPokemons, true);
-  } else {
-    renderPokemons(state.pokemons);
-  }
+  filterPokemonsAction(state);
   return state;
 }
 

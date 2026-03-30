@@ -1,5 +1,5 @@
 import { initialState } from "../../db.js";
-import { ACTION_HANDLERS } from "./hendlers.js";
+import { ACTION_HANDLERS } from "./handlers.js";
 
 export let state = { ...initialState };
 

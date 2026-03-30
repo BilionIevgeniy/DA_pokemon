@@ -18,3 +18,15 @@ export async function fetchPokemonAction(state) {
   state.nextUrl = next;
   return state;
 }
+
+export function filterPokemonsAction(state) {
+  const value = event.target.value;
+  if (value) {
+    const filteredPokemons = state.pokemons.filter((pokemon) =>
+      pokemon.name.includes(value.toLowerCase()),
+    );
+    renderPokemons(filteredPokemons, true);
+  } else {
+    renderPokemons(state.pokemons);
+  }
+}
