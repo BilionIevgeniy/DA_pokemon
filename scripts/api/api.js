@@ -29,6 +29,7 @@ export async function fetchData(url, options = {}) {
     data = await rowdata.json();
   } catch (error) {
     console.warn(error);
+  } finally {
   }
 
   return data;

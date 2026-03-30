@@ -3,13 +3,17 @@ import {
   fetchPokemons,
   fetchPokemonSpecies,
 } from "../api/api.js";
-import { modal } from "../existedElements.js";
+import { modal, spinner } from "../existedElements.js";
 import { calcScroll, getRandomHexColor } from "../helpers/helpers.js";
 import { renderPokemons } from "../render.js";
 import { generatePokemonsModalTemplate } from "../templates.js";
-
+function showSpinner(show) {
+  spinner.style.display = show ? "flex" : "none";
+}
 export async function fetchPokemonAction(state) {
+  showSpinner(true);
   const data = await fetchPokemons(state.nextUrl);
+
   const { results, next } = data;
 
   const pokemons = [];
@@ -18,6 +22,7 @@ export async function fetchPokemonAction(state) {
     const bgColor = getRandomHexColor();
     pokemons.push({ ...pokemon, ...pokemonsData, bgColor });
   }
+  showSpinner(false);
 
   renderPokemons(pokemons);
   state.pokemons = [...state.pokemons, ...pokemons];
@@ -25,7 +30,7 @@ export async function fetchPokemonAction(state) {
   return state;
 }
 
-export function filterPokemonsAction(state) {
+export function filterPokemonsAction(state, event) {
   const value = event.target.value;
   if (value) {
     const filteredPokemons = state.pokemons.filter((pokemon) =>
@@ -38,23 +43,10 @@ export function filterPokemonsAction(state) {
 }
 
 export async function openPokemonsModalAction(state, id) {
-  const currentPokemon = state.pokemons.find((pokemon) => pokemon.id == id);
-  const pokemonsSpecies = state.pokemonsSpeciec.find(
-    (pokemon) => pokemon.id == id,
-  );
-  if (!pokemonsSpecies) {
-    const currentPokemonsSpecies = await fetchPokemonSpecies(id);
-    state.pokemonsSpeciec.push(currentPokemonsSpecies);
-  }
-  const modalContent = generatePokemonsModalTemplate({
-    ...currentPokemon,
-    ...pokemonsSpecies,
-  });
-  modal.style.display = "flex";
-  modal.innerHTML = modalContent;
-  document.body.style.overflow = "hidden";
-  document.body.style.paddingRight = `${calcScroll()}px`;
-  return state;
+  const [newState, modalContent] = await getModalsContent(state, id);
+  state.currentPokemonsId = id;
+  showModal(modalContent);
+  return newState;
 }
 
 export function closeModalAction(event) {
@@ -63,4 +55,52 @@ export function closeModalAction(event) {
     document.body.style.overflow = "";
     document.body.style.paddingRight = "0px";
   }
+}
+
+export async function nextModalContentAction(state, isNext) {
+  const pokemonsIndex = calcPokemonsIndex(state, isNext);
+  const { id } = state.pokemons[pokemonsIndex];
+  const [newState, modalContent] = await getModalsContent(state, id);
+  state.currentPokemonsId = id;
+  modal.innerHTML = modalContent;
+  return newState;
+}
+
+function calcPokemonsIndex(state, isNext) {
+  let currentPokemonsIdx = state.pokemons.findIndex(
+    (pokemon) => pokemon.id == state.currentPokemonsId,
+  );
+  if (currentPokemonsIdx === 0 && !isNext) {
+    currentPokemonsIdx = state.pokemons.length - 1;
+  } else if (currentPokemonsIdx === state.pokemons.length - 1 && isNext) {
+    currentPokemonsIdx = 0;
+  } else {
+    currentPokemonsIdx = isNext
+      ? currentPokemonsIdx + 1
+      : currentPokemonsIdx - 1;
+  }
+  return currentPokemonsIdx;
+}
+
+function showModal(modalContent) {
+  modal.style.display = "flex";
+  modal.innerHTML = modalContent;
+  document.body.style.overflow = "hidden";
+  document.body.style.paddingRight = `${calcScroll()}px`;
+}
+
+async function getModalsContent(state, id) {
+  const currentPokemon = state.pokemons.find((pokemon) => pokemon.id == id);
+  let pokemonsSpecies = state.pokemonsSpecies.find(
+    (pokemon) => pokemon.id == id,
+  );
+  if (!pokemonsSpecies) {
+    pokemonsSpecies = await fetchPokemonSpecies(id);
+    state.pokemonsSpecies.push(pokemonsSpecies);
+  }
+  const modalContent = generatePokemonsModalTemplate({
+    ...currentPokemon,
+    ...pokemonsSpecies,
+  });
+  return [state, modalContent];
 }

@@ -23,14 +23,14 @@ function generatePokemonsTypes(types) {
 }
 
 export function generatePokemonsModalTemplate(currentPokemon) {
-  log(currentPokemon);
+  console.log(currentPokemon);
   const { id, name } = currentPokemon;
   const pokemonsName = name.charAt(0).toUpperCase() + name.slice(1);
   return /*html*/ `
-    <div class="card pokemon-card" data-id="${id}">
-        
+    <div class="card modal-card" data-id="${id}">
         ${pokemonsName}
-        
+        <button data-action="prevModalContentAction" color="prev">PREV</button>
+        <button data-action="nextModalContentAction" color="next">NEXT</button>
     </div>
   `;
 }

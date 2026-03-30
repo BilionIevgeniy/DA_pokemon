@@ -2,6 +2,7 @@ import {
   closeModalAction,
   fetchPokemonAction,
   filterPokemonsAction,
+  nextModalContentAction,
   openPokemonsModalAction,
 } from "./actions.js";
 
@@ -11,6 +12,7 @@ export const ACTION_HANDLERS = {
   openPokemonsModalAction: handleOpenPokemonsModal,
   closeModalAction: handleCloseModal,
   nextModalContentAction: handleNextModalContent,
+  prevModalContentAction: handlePrevModalContent,
 };
 
 function handleFetchPokemons(state) {
@@ -19,7 +21,7 @@ function handleFetchPokemons(state) {
 }
 
 function handleFilterPokemons(state, { event }) {
-  filterPokemonsAction(state);
+  filterPokemonsAction(state, event);
   return state;
 }
 
@@ -33,5 +35,8 @@ function handleCloseModal(state, { event }) {
 }
 
 function handleNextModalContent(state, payload) {
-  return state;
+  return nextModalContentAction(state, true);
+}
+function handlePrevModalContent(state, payload) {
+  return nextModalContentAction(state);
 }

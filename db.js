@@ -1,5 +1,6 @@
 export const initialState = {
   pokemons: [],
   nextUrl: "",
-  pokemonsSpeciec: [],
+  pokemonsSpecies: [],
+  currentPokemonsId: "",
 };
