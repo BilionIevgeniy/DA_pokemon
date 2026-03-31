@@ -224,7 +224,7 @@ img.pokemons_gif {
   color: var(--primary-color);
 }
 
-.stats-links li.active-link {
+.stats-links li.active_link {
   color: var(--primary-color);
   border-bottom-color: var(--primary-color);
 }

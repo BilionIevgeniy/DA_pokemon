@@ -80,6 +80,8 @@ export function openMadalStatsContentAction(target) {
   const card = target.closest(".card");
   const allContainers = card.querySelectorAll(`.stats-content`);
   const allLinkContainers = card.querySelectorAll(`.stats-links li`);
+  console.log(allLinkContainers);
+
   allLinkContainers.forEach((item) => item.classList.remove("active_link"));
   target.classList.add("active_link");
   allContainers.forEach((item) => item.classList.remove("active"));

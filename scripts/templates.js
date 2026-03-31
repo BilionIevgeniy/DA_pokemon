@@ -44,7 +44,7 @@ export function generatePokemonsModalTemplate(currentPokemon) {
       </div>
       <div class="main_content">
         <ul class="stats-links" data-action="openMadalStatsContent">
-          <li class="active-link" data-content="1">General</li>
+          <li class="active_link" data-content="1">General</li>
           <li data-content="2">Base Statistic</li>
           <li data-content="3">Regional Indexes</li>
         </ul>
