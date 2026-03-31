@@ -8,12 +8,12 @@ import {
 } from "./actions.js";
 
 export const ACTION_HANDLERS = {
-  fetchPokemonsAction: handleFetchPokemons,
-  filterPokemonsAction: handleFilterPokemons,
-  openPokemonsModalAction: handleOpenPokemonsModal,
+  fetchPokemons: handleFetchPokemons,
+  filterPokemons: handleFilterPokemons,
+  openPokemonsModal: handleOpenPokemonsModal,
   closeModalAction: handleCloseModal,
-  nextModalContentAction: handleNextModalContent,
-  prevModalContentAction: handlePrevModalContent,
+  nextModalContent: handleNextModalContent,
+  prevModalContent: handlePrevModalContent,
   openMadalStatsContent: handleOpenMadalStatsContent,
 };
 

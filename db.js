@@ -3,4 +3,5 @@ export const initialState = {
   nextUrl: "",
   pokemonsSpecies: [],
   currentPokemonsId: "",
+  filteredPokemons: null,
 };

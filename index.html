@@ -9,16 +9,18 @@
   <title>PokeDex</title>
 </head>
 <body>
-  <h1>Pokemon</h1>
-  <input data-action="filterPokemonsAction" id="filterName" type="text">
-  <div class="pokemon-cards-wrapper"></div>
-  <div class="more-pokemons-btn-wrapper">
-    <button data-action="fetchPokemonsAction" class="more-pokemons-btn">More Pokemons</button>
-  </div>
-  <!-- Modal -->
-  <div data-action="closeModalAction" class="modal pokemons-modal"></div>
-  <div class="modal spinner">
-    <img src="assets/spinner.gif" alt="Loading">
+  <header></header>
+  <div class="container">
+    <input data-action="filterPokemons" id="filterName" type="text">
+    <div class="pokemon-cards-wrapper"></div>
+    <div class="more-pokemons-btn-wrapper">
+      <button data-action="fetchPokemons" class="more-pokemons-btn">More Pokemons</button>
+    </div>
+    <!-- Modal -->
+    <div data-action="closeModalAction" class="modal pokemons-modal"></div>
+    <div class="modal spinner">
+      <img src="assets/spinner.gif" alt="Loading">
+    </div>
   </div>
 </body>
 </html>

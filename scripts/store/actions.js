@@ -1,5 +1,4 @@
-import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js";
-
+import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/auto/+esm";
 import {
   fetchPokemon,
   fetchPokemons,
@@ -36,10 +35,13 @@ export function filterPokemonsAction(state, event) {
     const filteredPokemons = state.pokemons.filter((pokemon) =>
       pokemon.name.includes(value.toLowerCase()),
     );
+    state.filteredPokemons = filteredPokemons;
     renderPokemons(filteredPokemons, true);
   } else {
+    state.filteredPokemons = null;
     renderPokemons(state.pokemons);
   }
+  return state;
 }
 
 export async function openPokemonsModalAction(state, id) {
@@ -50,7 +52,10 @@ export async function openPokemonsModalAction(state, id) {
 }
 
 export function closeModalAction(event) {
-  if (modal == event.target) {
+  if (
+    modal == event.target ||
+    event.target.classList.contains("close_pokemon")
+  ) {
     modal.style.display = "none";
     document.body.style.overflow = "";
     document.body.style.paddingRight = "0px";
@@ -58,12 +63,34 @@ export function closeModalAction(event) {
 }
 
 export async function nextModalContentAction(state, isNext) {
+  const pokemons = state.filteredPokemons || state.pokemons;
   const pokemonsIndex = calcPokemonsIndex(state, isNext);
-  const { id } = state.pokemons[pokemonsIndex];
+  const { id } = pokemons[pokemonsIndex];
   const [newState, modalContent] = await getModalsContent(state, id);
   state.currentPokemonsId = id;
   modal.innerHTML = modalContent;
   return newState;
+}
+
+export function openMadalStatsContentAction(target) {
+  const { content } = target.dataset || {};
+  if (!content) return;
+  const card = target.closest(".card");
+  const allContainers = card.querySelectorAll(`.stats-content`);
+  const allLinkContainers = card.querySelectorAll(`.stats-links li`);
+  allLinkContainers.forEach((item) => item.classList.remove("active_link"));
+  target.classList.add("active_link");
+  allContainers.forEach((item) => item.classList.remove("active"));
+  const container = card.querySelector(`.stats-content:nth-child(${content})`);
+  container.classList.add("active");
+
+  const ctx = container.querySelector("canvas");
+  const { data } = container.dataset || {};
+  console.log(ctx.innerHTML);
+
+  if (ctx && data) {
+    generateStats(ctx, data);
+  }
 }
 
 // HELPRES
@@ -79,12 +106,13 @@ function showModal(modalContent) {
 }
 
 function calcPokemonsIndex(state, isNext) {
-  let currentPokemonsIdx = state.pokemons.findIndex(
+  const pokemons = state.filteredPokemons || state.pokemons;
+  let currentPokemonsIdx = pokemons.findIndex(
     (pokemon) => pokemon.id == state.currentPokemonsId,
   );
   if (currentPokemonsIdx === 0 && !isNext) {
-    currentPokemonsIdx = state.pokemons.length - 1;
-  } else if (currentPokemonsIdx === state.pokemons.length - 1 && isNext) {
+    currentPokemonsIdx = pokemons.length - 1;
+  } else if (currentPokemonsIdx === pokemons.length - 1 && isNext) {
     currentPokemonsIdx = 0;
   } else {
     currentPokemonsIdx = isNext
@@ -113,32 +141,48 @@ async function getModalsContent(state, id) {
   return [state, modalContent];
 }
 
-export function openMadalStatsContentAction(target) {
-  const { content } = target.dataset || {};
-  const card = target.closest(".card");
-  const ctx = card.querySelector(`.stats-content:nth-child(${content})`);
-  generateStats(ctx);
-}
+function generateStats(ctx, data) {
+  const [statsLabels, statsValue, statsLabel] = generateStatsData(
+    JSON.parse(data),
+  );
+  const existingChart = Chart.getChart(ctx);
+  if (existingChart) {
+    existingChart.destroy();
+  }
 
-function generateStats(ctx) {
-  const char = new Chart(ctx, {
+  new Chart(ctx, {
     type: "bar",
     data: {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      labels: statsLabels,
       datasets: [
         {
-          label: "# of Votes",
-          data: [12, 19, 3, 5, 2, 3],
+          label: statsLabel,
+          data: statsValue,
           borderWidth: 1,
+          backgroundColor: getRandomHexColor(),
         },
       ],
     },
     options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
+      indexAxis: "y",
     },
   });
+}
+
+function generateStatsData(data) {
+  let statsLabels = [];
+  let statsValue = [];
+  let statsLabel = "";
+  data.forEach((item) => {
+    if (item.base_stat) {
+      statsLabels.push(item.stat.name);
+      statsValue.push(item.base_stat);
+      statsLabel = "Base Statistic";
+    } else {
+      statsLabels.push(item.pokedex.name);
+      statsValue.push(item.entry_number);
+      statsLabel = "Regional Indexes";
+    }
+  });
+  return [statsLabels, statsValue, statsLabel];
 }

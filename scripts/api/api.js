@@ -1,3 +1,5 @@
+import { getRandomHexColor } from "./helpers/helpers.js";
+
 export async function fetchPokemons(url) {
   let data;
   try {
@@ -21,6 +23,7 @@ export async function fetchPokemonsSpecies(id) {
   const data = await fetchData(url);
   return data;
 }
+
 export async function fetchPokemonsGender(id) {
   const url = "https://pokeapi.co/api/v2/gender/" + id;
   const data = await fetchData(url);
@@ -33,9 +36,7 @@ export async function fetchData(url, options = {}) {
     const rowdata = await fetch(url, options);
     data = await rowdata.json();
   } catch (error) {
-    console.warn(error);
-  } finally {
+    throw new Error(error);
   }
-
   return data;
 }
