@@ -1,5 +1,3 @@
-import { getRandomHexColor } from "./helpers/helpers.js";
-
 export async function fetchPokemons(url) {
   let data;
   try {

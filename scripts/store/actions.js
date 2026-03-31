@@ -5,21 +5,21 @@ import {
   fetchPokemonsSpecies,
 } from "../api/api.js";
 import { modal, morePokemonsBtn, spinner } from "../existedElements.js";
-import { calcScroll, getRandomHexColor } from "../api/helpers/helpers.js";
+import { calcScroll, getPokemonsColor } from "../helpers/helpers.js";
 import { renderPokemons } from "../render.js";
 import { generatePokemonsModalTemplate } from "../templates.js";
 
 export async function fetchPokemonAction(state) {
   showSpinner(true);
   const data = await fetchPokemons(state.nextUrl);
-
   const { results, next } = data;
-
   const pokemons = [];
   for (const pokemon of results) {
-    const pokemonsData = await fetchPokemon(pokemon.url);
-    const bgColor = getRandomHexColor();
-    pokemons.push({ ...pokemon, ...pokemonsData, bgColor });
+    const data = await fetchPokemon(pokemon.url);
+    const pokemonsData = { ...pokemon, ...data };
+    const bgColor = getPokemonsColor(pokemonsData?.types[0]?.type?.name);
+    pokemonsData.bgColor = bgColor;
+    pokemons.push(pokemonsData);
   }
   showSpinner(false);
 
@@ -78,10 +78,9 @@ export function openMadalStatsContentAction(target) {
   const { content } = target.dataset || {};
   if (!content) return;
   const card = target.closest(".card");
+  const { color } = card.dataset || {};
   const allContainers = card.querySelectorAll(`.stats-content`);
   const allLinkContainers = card.querySelectorAll(`.stats-links li`);
-  console.log(allLinkContainers);
-
   allLinkContainers.forEach((item) => item.classList.remove("active_link"));
   target.classList.add("active_link");
   allContainers.forEach((item) => item.classList.remove("active"));
@@ -90,10 +89,9 @@ export function openMadalStatsContentAction(target) {
 
   const ctx = container.querySelector("canvas");
   const { data } = container.dataset || {};
-  console.log(ctx.innerHTML);
 
   if (ctx && data) {
-    generateStats(ctx, data);
+    generateStats(ctx, data, color);
   }
 }
 
@@ -148,7 +146,7 @@ async function getModalsContent(state, id) {
   return [state, modalContent];
 }
 
-function generateStats(ctx, data) {
+function generateStats(ctx, data, bgColor) {
   const [statsLabels, statsValue, statsLabel] = generateStatsData(
     JSON.parse(data),
   );
@@ -166,7 +164,7 @@ function generateStats(ctx, data) {
           label: statsLabel,
           data: statsValue,
           borderWidth: 1,
-          backgroundColor: getRandomHexColor(),
+          backgroundColor: bgColor,
         },
       ],
     },

@@ -32,11 +32,12 @@ export function generatePokemonsModalTemplate(currentPokemon) {
     height,
     weight,
     base_experience,
+    bgColor,
   } = currentPokemon;
   const src = sprites.other.showdown.front_default;
   const pokemonsName = name.charAt(0).toUpperCase() + name.slice(1);
   return /*html*/ `
-    <div class="card modal-card" data-id="${id}" data-content="">
+    <div class="card modal-card" data-id="${id}" data-color="${bgColor}">
       <div data-action="closeModalAction" class="close_pokemon">X</div>
       <div class="pokemon_image">
         <img src="assets/img/bg.png" alt="background image">

@@ -187,10 +187,10 @@ h1 {
 
 img.pokemons_gif {
   position: absolute;
-  bottom: 50%;
-  right: 45%;
-  width: 40px;
-  height: 40px;
+  bottom: 10%;
+  right: 5%;
+  width: 60px;
+  height: 60px;
 }
 
 .no_pokemons {
@@ -211,7 +211,6 @@ img.pokemons_gif {
 }
 
 .stats-links li {
-  font-size: 1.6rem;
   font-weight: 600;
   padding: 8px 12px;
   cursor: pointer;
