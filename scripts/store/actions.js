@@ -4,7 +4,7 @@ import {
   fetchPokemons,
   fetchPokemonsSpecies,
 } from "../api/api.js";
-import { modal, spinner } from "../existedElements.js";
+import { modal, morePokemonsBtn, spinner } from "../existedElements.js";
 import { calcScroll, getRandomHexColor } from "../api/helpers/helpers.js";
 import { renderPokemons } from "../render.js";
 import { generatePokemonsModalTemplate } from "../templates.js";
@@ -32,12 +32,14 @@ export async function fetchPokemonAction(state) {
 export function filterPokemonsAction(state, event) {
   const value = event.target.value;
   if (value) {
+    showMorePokemonsBtn(false);
     const filteredPokemons = state.pokemons.filter((pokemon) =>
       pokemon.name.includes(value.toLowerCase()),
     );
     state.filteredPokemons = filteredPokemons;
     renderPokemons(filteredPokemons, true);
   } else {
+    showMorePokemonsBtn(true);
     state.filteredPokemons = null;
     renderPokemons(state.pokemons);
   }
@@ -96,6 +98,9 @@ export function openMadalStatsContentAction(target) {
 // HELPRES
 function showSpinner(show) {
   spinner.style.display = show ? "flex" : "none";
+}
+function showMorePokemonsBtn(show) {
+  morePokemonsBtn.style.display = show ? "block" : "none";
 }
 
 function showModal(modalContent) {
