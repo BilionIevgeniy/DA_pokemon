@@ -86,10 +86,8 @@ export function openMadalStatsContentAction(target) {
   allContainers.forEach((item) => item.classList.remove("active"));
   const container = card.querySelector(`.stats-content:nth-child(${content})`);
   container.classList.add("active");
-
   const ctx = container.querySelector("canvas");
   const { data } = container.dataset || {};
-
   if (ctx && data) {
     generateStats(ctx, data, color);
   }
@@ -99,6 +97,7 @@ export function openMadalStatsContentAction(target) {
 function showSpinner(show) {
   spinner.style.display = show ? "flex" : "none";
 }
+
 function showMorePokemonsBtn(show) {
   morePokemonsBtn.style.display = show ? "block" : "none";
 }
