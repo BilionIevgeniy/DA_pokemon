@@ -17,8 +17,8 @@ export const ACTION_HANDLERS = {
   openMadalStatsContent: handleOpenMadalStatsContent,
 };
 
-function handleFetchPokemons(state) {
-  const newState = fetchPokemonAction(state);
+async function handleFetchPokemons(state) {
+  const newState = await fetchPokemonAction(state);
   return newState;
 }
 

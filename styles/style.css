@@ -156,7 +156,14 @@ h1 {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   color: #333;
 }
+
 .close_pokemon {
+  height: 25px;
+  width: 25px;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   top: 15px;
   right: 15px;
