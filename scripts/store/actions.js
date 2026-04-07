@@ -41,7 +41,7 @@ export function filterPokemonsAction(state, event) {
   } else {
     showMorePokemonsBtn(true);
     state.filteredPokemons = null;
-    renderPokemons(state.pokemons);
+    renderPokemons(state.pokemons, true);
   }
   return state;
 }
